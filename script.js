@@ -43,30 +43,37 @@ const totalCount = document.getElementById('totalCount');
 const nextBtn = document.getElementById('nextBtn');
 const explainDiv = document.getElementById('explain');
 
+const bgm = document.getElementById('bgm');
+const correctSound = document.getElementById('correctSound');
+const wrongSound = document.getElementById('wrongSound');
+
+bgm.volume = 0.2;
+bgm.play();
+
 function shuffle(arr){
-  for(let i=arr.length-1; i>0; i--){
+  for(let i=arr.length-1;i>0;i--){
     const j=Math.floor(Math.random()*(i+1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
 }
 
 function pickProblem(){
-  idx = Math.floor(Math.random() * sentences.length);
+  idx = Math.floor(Math.random()*sentences.length);
   return JSON.parse(JSON.stringify(sentences[idx]));
 }
 
 function render(problem){
-  explainDiv.style.display = 'none';
-  choicesDiv.innerHTML = '';
+  explainDiv.style.display='none';
+  choicesDiv.innerHTML='';
   independentText.textContent = problem.independent;
   dependentText.textContent = problem.dependent;
   const opts = [...problem.choices];
   shuffle(opts);
-  opts.forEach(opt => {
+  opts.forEach(opt=>{
     const b = document.createElement('button');
     b.className = 'choice';
     b.textContent = opt;
-    b.addEventListener('click', () => handleChoice(opt, problem, b));
+    b.addEventListener('click', ()=>handleChoice(opt, problem, b));
     choicesDiv.appendChild(b);
   });
 }
@@ -74,26 +81,30 @@ function render(problem){
 function handleChoice(selected, problem, btnElement){
   total++;
   totalCount.textContent = total;
-  const sel = ('' + selected).toLowerCase().trim();
+  const sel = (''+selected).toLowerCase().trim();
   const ok = sel === problem.correctConj.toLowerCase();
   if(ok){
     correct++;
     correctCount.textContent = correct;
     if(btnElement) btnElement.classList.add('correct');
+    correctSound.currentTime = 0;
+    correctSound.play();
   } else {
     if(btnElement) btnElement.classList.add('wrong');
     Array.from(choicesDiv.querySelectorAll('button.choice')).forEach(b=>{
-      if(b.textContent.toLowerCase() === problem.correctConj.toLowerCase())
+      if(b.textContent.toLowerCase()===problem.correctConj.toLowerCase())
         b.classList.add('correct');
     });
+    wrongSound.currentTime = 0;
+    wrongSound.play();
   }
-  const full = `${problem.independent} ${problem.correctConj} ${problem.dependent}.`;
-  explainDiv.innerHTML = `<strong>Complete Sentence:</strong> ${full}<br><small>${problem.explanation || ''}</small>`;
-  explainDiv.style.display = 'block';
+  const full=`${problem.independent} ${problem.correctConj} ${problem.dependent}.`;
+  explainDiv.innerHTML=`<strong>Complete Sentence:</strong> ${full}<br><small>${problem.explanation||''}</small>`;
+  explainDiv.style.display='block';
 }
 
-nextBtn.addEventListener('click', ()=>{
-  const prob = pickProblem();
+nextBtn.addEventListener('click',()=>{
+  const prob=pickProblem();
   render(prob);
 });
 
