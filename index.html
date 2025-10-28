@@ -31,11 +31,11 @@ button.choice.wrong { border-color:#c0392b; background:#fdecea; }
 </div>
 <script>
 const sentences=[
-{independent:"I stayed home",dependent:"it was raining",correctConj:"because",choices:["because","although","if","when"],explanation:"『because』で原因を表します。"},
-{independent:"He improved his grades",dependent:"he studied harder",correctConj:"because",choices:["although","because","while","unless"],explanation:"原因を表すので 'because' が適切。"},
-{independent:"I will call you",dependent:"I arrive",correctConj:"when",choices:["if","when","unless","though"],explanation:"到着したときに電話する意味になります。"},
-{independent:"She went out",dependent:"it was raining",correctConj:"although",choices:["although","because","so","if"],explanation:"『although』で逆接を表します。"},
-{independent:"You can’t enter",dependent:"you have a ticket",correctConj:"unless",choices:["if","because","unless","while"],explanation:"『unless』で「〜しない限り」を表します。"}
+{independent:"I stayed home",dependent:"it was raining",correctConj:"because",choices:["because","although","if","when"],explanation:"'because' expresses the cause."},
+{independent:"He improved his grades",dependent:"he studied harder",correctConj:"because",choices:["although","because","while","unless"],explanation:"Because it expresses the cause, 'because' is appropriate."},
+{independent:"I will call you",dependent:"I arrive",correctConj:"when",choices:["if","when","unless","though"],explanation:"It means calling when you arrive."},
+{independent:"She went out",dependent:"it was raining",correctConj:"although",choices:["although","because","so","if"],explanation:"'although' expresses adversative conjunction."},
+{independent:"You can’t enter",dependent:"you have a ticket",correctConj:"unless",choices:["if","because","unless","while"],explanation:"'Unless' means 'unless...'"}
 ];
 let idx=-1,correct=0,total=0;
 const independentText=document.getElementById('independentText');
@@ -48,7 +48,7 @@ const explainDiv=document.getElementById('explain');
 function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}
 function pickProblem(){idx=Math.floor(Math.random()*sentences.length);return JSON.parse(JSON.stringify(sentences[idx]));}
 function render(problem){explainDiv.style.display='none';choicesDiv.innerHTML='';independentText.textContent=problem.independent;dependentText.textContent=problem.dependent;const opts=[...problem.choices];shuffle(opts);opts.forEach(opt=>{const b=document.createElement('button');b.className='choice';b.textContent=opt;b.addEventListener('click',()=>handleChoice(opt,problem,b));choicesDiv.appendChild(b);});}
-function handleChoice(selected,problem,btnElement){total++;totalCount.textContent=total;const sel=(''+selected).toLowerCase().trim();const ok=sel===problem.correctConj.toLowerCase();if(ok){correct++;correctCount.textContent=correct;if(btnElement)btnElement.classList.add('correct');}else{if(btnElement)btnElement.classList.add('wrong');Array.from(choicesDiv.querySelectorAll('button.choice')).forEach(b=>{if(b.textContent.toLowerCase()===problem.correctConj.toLowerCase())b.classList.add('correct');});}const full=`${problem.independent} ${problem.correctConj} ${problem.dependent}.`;explainDiv.innerHTML=`<strong>完成文:</strong> ${full}<br><small>${problem.explanation||''}</small>`;explainDiv.style.display='block';}
+function handleChoice(selected,problem,btnElement){total++;totalCount.textContent=total;const sel=(''+selected).toLowerCase().trim();const ok=sel===problem.correctConj.toLowerCase();if(ok){correct++;correctCount.textContent=correct;if(btnElement)btnElement.classList.add('correct');}else{if(btnElement)btnElement.classList.add('wrong');Array.from(choicesDiv.querySelectorAll('button.choice')).forEach(b=>{if(b.textContent.toLowerCase()===problem.correctConj.toLowerCase())b.classList.add('correct');});}const full=`${problem.independent} ${problem.correctConj} ${problem.dependent}.`;explainDiv.innerHTML=`<strong>Complete Sentence:</strong> ${full}<br><small>${problem.explanation||''}</small>`;explainDiv.style.display='block';}
 nextBtn.addEventListener('click',()=>{const prob=pickProblem();render(prob);});
 nextBtn.click();
 </script>
